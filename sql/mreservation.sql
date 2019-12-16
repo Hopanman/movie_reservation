@@ -96,5 +96,28 @@ CONSTRAINT SEAT_RESERVED_FK_3 FOREIGN KEY(reservation_id) REFERENCES reservation
 CREATE SEQUENCE seat_reserved_SEQ
 NOCACHE;
 
+--상영관 데이터 삽입
+insert into auditorium values(auditorium_seq.nextval, '1관', 30);
+insert into auditorium values(auditorium_seq.nextval, '2관', 42);
+insert into auditorium values(auditorium_seq.nextval, '3관', 56);
+commit;
 
+--영화 데이터 삽입
+insert into movie values(movie_seq.nextval, '겨울왕국 2', 'Frozen 2','크리스 벅, 제니퍼 리','크리스틴 벨, 이디나 멘젤',103,'전체관람가');
+insert into movie values(movie_seq.nextval, '쥬만지: 넥스트 레벨', 'Jumanji : The Next Level','제이크 캐스단','드웨인 존슨, 잭 블랙',123,'12세이상관람가');
+insert into movie values(movie_seq.nextval, '포드 V 페라리', 'FORD v FERRARI','제임스 맨골드','맷 데이먼, 크리스찬 베일',152,'12세이상관람가');
+insert into movie values(movie_seq.nextval, '나이브스 아웃', 'KNIVES OUT','라이언 존슨','다니엘 크레이그, 크리스 에반스',130,'12세이상관람가');
+commit;
 
+--좌석 데이터 삽입
+begin
+    for i in 5..7 loop
+        for j in 1..i loop
+            for k in 1..i+1 loop
+                insert into seat values(seat_seq.nextval, j, k, i-4);
+                commit;
+            end loop;
+        end loop;
+    end loop;
+end;
+/

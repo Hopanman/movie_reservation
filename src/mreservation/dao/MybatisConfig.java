@@ -10,7 +10,7 @@ public class MybatisConfig {
 	private static SqlSessionFactory sqlSessionFactory;
 
 	static {
-		String resource = "mybatis-config.xml";		//Mybatis ?Ñ§?†ï ?åå?ùº
+		String resource = "mybatis-config.xml";	
 
 		try {
 			Reader reader = Resources.getResourceAsReader(resource);
