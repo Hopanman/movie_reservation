@@ -10,6 +10,7 @@
 		<typeAlias type="mreservation.vo.Movie" alias="Movie" />
 		<typeAlias type="mreservation.vo.Screening" alias="Screening" />
 		<typeAlias type="mreservation.vo.AuditoriumSize" alias="AuditoriumSize" />
+		<typeAlias type="mreservation.vo.Seat" alias="Seat" />
 	</typeAliases>
 	
 	<!-- DB접속 정보 셋팅 -->

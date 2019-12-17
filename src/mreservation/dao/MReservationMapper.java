@@ -9,4 +9,5 @@ public interface MReservationMapper {
 	ArrayList<Movie> movieList();
 	ArrayList<Screening> screeningList();
 	AuditoriumSize getAuditoriumSize(HashMap<String, String> map);
+	ArrayList<Seat> getReservedSeat(HashMap<String, String> map);
 }
