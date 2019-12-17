@@ -1,6 +1,7 @@
 package mreservation.vo;
 
 public class AuditoriumSize {
+	private int auditorium_id;
 	private int max_seat_row;
 	private int max_seat_number;
 	
@@ -8,10 +9,19 @@ public class AuditoriumSize {
 		
 	}
 
-	public AuditoriumSize(int max_seat_row, int max_seat_number) {
+	public AuditoriumSize(int auditorium_id, int max_seat_row, int max_seat_number) {
 		super();
+		this.auditorium_id = auditorium_id;
 		this.max_seat_row = max_seat_row;
 		this.max_seat_number = max_seat_number;
+	}
+	
+	public int getAuditorium_id() {
+		return auditorium_id;
+	}
+
+	public void setAuditorium_id(int auditorium_id) {
+		this.auditorium_id = auditorium_id;
 	}
 
 	public int getMax_seat_row() {
@@ -32,8 +42,9 @@ public class AuditoriumSize {
 
 	@Override
 	public String toString() {
-		return "AuditoriumSize [max_seat_row=" + max_seat_row + ", max_seat_number=" + max_seat_number + "]";
+		return "AuditoriumSize [auditorium_id=" + auditorium_id + ", max_seat_row=" + max_seat_row
+				+ ", max_seat_number=" + max_seat_number + "]";
 	}
-	
+
 	
 }
