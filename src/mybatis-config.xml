@@ -7,7 +7,8 @@
 
 	<!-- Java Class에 대한 alias 지정 -->
 	<typeAliases>
-		<typeAlias type="" alias="" />
+		<typeAlias type="mreservation.vo.Movie" alias="Movie" />
+		<typeAlias type="mreservation.vo.Screening" alias="Screening" />
 	</typeAliases>
 	
 	<!-- DB접속 정보 셋팅 -->
@@ -25,7 +26,7 @@
 	
 	<!-- Mapper 파일 include -->
 	<mappers>
-		<mapper resource="" />
+		<mapper resource="mreservationMapper.xml" />
 	</mappers>
 	
 </configuration>
