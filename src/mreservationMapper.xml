@@ -7,4 +7,21 @@
 	<select id="movieList" resultType="Movie">
 		select * from movie order by movie_title
 	</select>
+	
+	<select id="screeningList" resultType="Screening">
+		select sc.screening_start, sc.screening_end, mo.movie_title, sc.auditorium_id
+		from screening sc, movie mo
+		where sc.movie_id=mo.movie_id
+		and screening_start > sysdate+30/1440
+		order by movie_title, screening_start;
+	</select>
+	
+	<select id="getAuditoriumSize" parameterType="map" resultType="AuditoriumSize">
+		select max(seat_row), max(seat_number) from seat where auditorium_id=(select sc.auditorium_id
+		from screening sc, movie mo
+		where sc.movie_id=mo.movie_id
+		and screening_start > sysdate+30/1440
+		and movie_title=#{movie_title}
+		and screening_start = to_date(#{screening_start},'mm-dd hh24:mi'));
+	</select>
 </mapper>
