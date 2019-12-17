@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mreservation.dao.MRservationMapper">
+<mapper namespace="mreservation.dao.MReservationMapper">
 	<select id="movieList" resultType="Movie">
 		select * from movie order by movie_title
 	</select>
@@ -30,4 +30,22 @@
 		and mo.movie_title=#{movie_title} and sc.screening_start = to_date(#{screening_start},'mm-dd hh24:mi'))) se_r, seat se
 		where se_r.seat_id=se.seat_id
 	</select>
+	
+	<insert id="insertReservation" parameterType="map">
+		insert into reservation values(reservation_seq.nextval, null, (select screening_id from screening sc, movie mo
+		where sc.movie_id=mo.movie_id
+		and mo.movie_title=#{movie_title}
+		and sc.screening_start = to_date(#{screening_start},'mm-dd hh24:mi')))
+	</insert>
+	
+	<insert id="reserveSeat" parameterType="map">
+		insert into seat_reserved values(seat_reserved_seq.nextval,
+		(select seat_id
+		from seat
+		where seat_row=#{seat_row}
+		and seat_number=#{seat_number}
+		and auditorium_id=#{auditorium_id}),
+		(select reservation_id from reservation where reservation_id=(select max(reservation_id) from reservation)),
+		(select screening_id from reservation where reservation_id=(select max(reservation_id) from reservation)));
+	</insert>
 </mapper>
