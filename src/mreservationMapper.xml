@@ -54,8 +54,20 @@
 		select * from reservation where reservation_id=(select max(reservation_id) from reservation)
 	</select>
 	
-	<delete id="deleteReservation" parameterType="int">
-		delete from reservation where reservation_id=#{reservation_id}
+	<delete id="deleteReservation" parameterType="map">
+		delete from reservation
+		<where>
+			<if test="refund == true">
+				reservation_id=(select re.reservation_id
+				from reservation re, screening sc
+				where re.screening_id=sc.screening_id
+				and re.reservation_id=#{reservation_id}
+				and screening_start > sysdate+20/1440)
+			</if>
+			<if test="refund == false">
+				reservation_id=#{reservation_id}
+			</if>
+		</where>
 	</delete>
 	
 	<select id="getTicket" parameterType="int" resultType="Ticket">
@@ -67,4 +79,8 @@
 		and se_r.seat_id=se.seat_id
 		and re.reservation_id=#{reservation_id}
 	</select>
+	
+	<insert id="insertUser" parameterType="User">
+		insert into theater_user values(user_seq.nextval, #{user_name}, #{user_password}, #{user_phone}, #{user_email}, default)
+	</insert>
 </mapper>

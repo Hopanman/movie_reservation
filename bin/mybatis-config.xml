@@ -13,6 +13,7 @@
 		<typeAlias type="mreservation.vo.Seat" alias="Seat" />
 		<typeAlias type="mreservation.vo.Reservation" alias="Reservation" />
 		<typeAlias type="mreservation.vo.Ticket" alias="Ticket" />
+		<typeAlias type="mreservation.vo.User" alias="User" />
 	</typeAliases>
 	
 	<!-- DB접속 정보 셋팅 -->

@@ -14,6 +14,7 @@ import mreservation.vo.Reservation;
 import mreservation.vo.Screening;
 import mreservation.vo.Seat;
 import mreservation.vo.Ticket;
+import mreservation.vo.User;
 
 public class MReservationDAO {
 	
@@ -147,7 +148,10 @@ public class MReservationDAO {
 			res = mapper.reserveSeat(map);
 			session.commit();
 		}catch (PersistenceException e) {
-			deleteReservation(reservation_id);
+			HashMap<String, Object> delete_map = new HashMap<String, Object>();
+			delete_map.put("reservation_id", reservation_id);
+			delete_map.put("refund", false);
+			deleteReservation(delete_map);
 			System.out.println("올바른 좌석을 선택해주세요");
 			System.out.println();
 			try {
@@ -167,21 +171,24 @@ public class MReservationDAO {
 
 	
 
-	public boolean deleteReservation(int reservation_id) {
+	public boolean deleteReservation(HashMap<String, Object> map) {
 		SqlSession session = null;
 		int res = 0;
 		
 		try {
 			session = factory.openSession();
 			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
-			res = mapper.deleteReservation(reservation_id);
+			res = mapper.deleteReservation(map);
 			session.commit();
 		}catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("시스템 문제가 발생했습니다");
+			return false;
 		}finally {
 			if(session != null) session.close();
 		}
 		
+		if(res == 0) System.out.println("환불할 수 없는 예매번호입니다");
 		return res > 0;
 	}
 
@@ -217,5 +224,23 @@ public class MReservationDAO {
 		}
 		
 		return ticket;
+	}
+
+	public boolean insertUser(User user) {
+		SqlSession session = null;
+		int res = 0;
+		
+		try {
+			session = factory.openSession();
+			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
+			res = mapper.insertUser(user);
+			session.commit();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(session != null) session.close();
+		}
+		
+		return res > 0;
 	}
 }
