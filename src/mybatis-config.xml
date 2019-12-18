@@ -11,6 +11,8 @@
 		<typeAlias type="mreservation.vo.Screening" alias="Screening" />
 		<typeAlias type="mreservation.vo.AuditoriumSize" alias="AuditoriumSize" />
 		<typeAlias type="mreservation.vo.Seat" alias="Seat" />
+		<typeAlias type="mreservation.vo.Reservation" alias="Reservation" />
+		<typeAlias type="mreservation.vo.Ticket" alias="Ticket" />
 	</typeAliases>
 	
 	<!-- DB접속 정보 셋팅 -->

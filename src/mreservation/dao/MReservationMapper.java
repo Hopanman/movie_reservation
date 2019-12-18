@@ -12,4 +12,7 @@ public interface MReservationMapper {
 	ArrayList<Seat> getReservedSeat(HashMap<String, String> map);
 	int insertReservation(HashMap<String, String> map);
 	int reserveSeat(HashMap<String, Integer> map);
+	Reservation currentReservation();
+	int deleteReservation(int reservation_id);
+	ArrayList<Ticket> getTicket(int reservation_id);
 }

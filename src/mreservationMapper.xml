@@ -17,11 +17,12 @@
 	</select>
 	
 	<select id="getAuditoriumSize" parameterType="map" resultType="AuditoriumSize">
-		select max(seat_row), max(seat_number) from seat where auditorium_id=(select sc.auditorium_id
+		select auditorium_id, max(seat_row) as max_seat_row, max(seat_number) as max_seat_number from seat where auditorium_id=(select sc.auditorium_id
 		from screening sc, movie mo
 		where sc.movie_id=mo.movie_id
 		and movie_title=#{movie_title}
 		and screening_start = to_date(#{screening_start},'mm-dd hh24:mi'))
+		group by auditorium_id
 	</select>
 	
 	<select id="getReservedSeat" parameterType="map" resultType="Seat">
@@ -35,7 +36,7 @@
 		insert into reservation values(reservation_seq.nextval, null, (select screening_id from screening sc, movie mo
 		where sc.movie_id=mo.movie_id
 		and mo.movie_title=#{movie_title}
-		and sc.screening_start = to_date(#{screening_start},'mm-dd hh24:mi')))
+		and sc.screening_start = to_date(#{screening_start},'mm-dd hh24:mi')),default)
 	</insert>
 	
 	<insert id="reserveSeat" parameterType="map">
@@ -46,6 +47,24 @@
 		and seat_number=#{seat_number}
 		and auditorium_id=#{auditorium_id}),
 		(select reservation_id from reservation where reservation_id=(select max(reservation_id) from reservation)),
-		(select screening_id from reservation where reservation_id=(select max(reservation_id) from reservation)));
+		(select screening_id from reservation where reservation_id=(select max(reservation_id) from reservation)))
 	</insert>
+	
+	<select id="currentReservation" resultType="Reservation">
+		select * from reservation where reservation_id=(select max(reservation_id) from reservation)
+	</select>
+	
+	<delete id="deleteReservation" parameterType="int">
+		delete from reservation where reservation_id=#{reservation_id}
+	</delete>
+	
+	<select id="getTicket" parameterType="int" resultType="Ticket">
+		select mo.movie_title, mo.movie_title_en,mo.movie_rating, sc.screening_cnt, sc.screening_start, sc.screening_end, sc.auditorium_id, re.reservation_id, re.user_id, re.reservation_time, se.seat_row, se.seat_number, count(*) over(partition by re.reservation_id) as audience_cnt 
+		from movie mo, screening sc, reservation re, seat_reserved se_r, seat se
+		where mo.movie_id=sc.movie_id
+		and sc.screening_id=re.screening_id
+		and re.reservation_id=se_r.reservation_id
+		and se_r.seat_id=se.seat_id
+		and re.reservation_id=#{reservation_id}
+	</select>
 </mapper>
