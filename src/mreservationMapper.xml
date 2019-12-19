@@ -33,7 +33,7 @@
 	</select>
 	
 	<insert id="insertReservation" parameterType="map">
-		insert into reservation values(reservation_seq.nextval, null, (select screening_id from screening sc, movie mo
+		insert into reservation values(reservation_seq.nextval, #{user_id}, (select screening_id from screening sc, movie mo
 		where sc.movie_id=mo.movie_id
 		and mo.movie_title=#{movie_title}
 		and sc.screening_start = to_date(#{screening_start},'mm-dd hh24:mi')),default)
@@ -92,4 +92,8 @@
 			</when>
 		</choose>
 	</select>
+	
+	<update id="updateUserInfo" parameterType="User">
+		update theater_user set user_password=#{user_password}, user_phone=#{user_phone}, user_email=#{user_email}, user_point=#{user_point} where user_id=#{user_id}
+	</update>
 </mapper>

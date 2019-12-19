@@ -60,16 +60,159 @@ public class MReservationUI {
 				try {
 					Thread.sleep(1500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
 		
 	}
-	
+
 	void updateUserInfo() {
+		sc.nextLine();
+		System.out.println();
+		System.out.println("============회원정보===============");
+		System.out.println("아이디:"+user.getUser_name());
+		System.out.println("비밀번호:"+user.getUser_password().replaceAll("[A-Za-z0-9]", "*"));
+		System.out.println("핸드폰번호:"+user.getUser_phone());
+		System.out.println("이메일주소:"+user.getUser_email());
+		System.out.println("잔여포인트:"+user.getUser_point()+"점");
+		System.out.println("============회원정보===============");
+		System.out.println();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("회원정보수정을 위해 변경할 비밀번호/핸드폰번호/이메일주소를 입력해주세요(메인화면:0)");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("비밀번호는 8~20자리의 영문 대소문자,숫자를 사용하세요");
+		System.out.println("변경하지 않는 항목은 엔터를 눌러주세요");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String user_password;
+		String user_password_confirm;
+		String user_phone;
+		String user_email;
 		
+		while(true) {
+			Pattern pattern = Pattern.compile("[A-Za-z0-9]{8,20}");
+			System.out.print("비밀번호>");
+			user_password = sc.nextLine().trim();
+			
+			if(user_password.equals("0")) return;
+			if(user_password.equals("")) break;
+			
+			Matcher matcher = pattern.matcher(user_password);
+			if(!matcher.matches()) {
+				System.out.println();
+				System.out.println("비밀번호는 8~20자리의 영문 대소문자,숫자로 구성되어야 합니다.");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println();
+			} else {
+				break;
+			}
+		}
+		
+		while(true) {
+			if(user_password.equals("")) break;
+			System.out.print("비밀번호 확인>");
+			user_password_confirm = sc.nextLine().trim();
+			
+			if(user_password_confirm.equals("0")) return;
+			
+			if(!user_password_confirm.equals(user_password)) {
+				System.out.println();
+				System.out.println("입력하신 새 비밀번호와 일치하지 않습니다");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println();
+			}
+			else break;
+		}
+		
+		while(true) {
+			Pattern pattern = Pattern.compile("01[01789]-[0-9]{3,4}-[0-9]{4}");
+			System.out.print("핸드폰번호>");
+			user_phone = sc.nextLine().trim();
+			
+			if(user_phone.equals("0")) return;
+			if(user_phone.equals("")) break;
+			
+			Matcher matcher = pattern.matcher(user_phone);
+			if(!matcher.matches()) {
+				System.out.println();
+				System.out.println("올바른 형식으로 입력해주세요");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println();
+			} else {
+				break;
+			}
+		}
+		
+		while(true) {
+			Pattern pattern = Pattern.compile("[a-z0-9]+@[a-z]+\\.[a-z]+");
+			System.out.print("이메일주소>");
+			user_email = sc.nextLine().trim();
+			
+			if(user_email.equals("0")) return;
+			if(user_email.equals("")) break;
+			
+			Matcher matcher = pattern.matcher(user_email);
+			if(!matcher.matches()) {
+				System.out.println();
+				System.out.println("올바른 형식으로 입력해주세요");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println();
+			} else {
+				break;
+			}
+		}
+		
+		if(user_password.equals("") && user_phone.equals("") && user_email.equals("")) return;
+		
+		String pre_user_password = user.getUser_password();
+		String pre_user_phone = user.getUser_phone();
+		String pre_user_email = user.getUser_email();
+		
+		if(!user_password.equals("")) user.setUser_password(user_password);
+		if(!user_phone.equals("")) user.setUser_phone(user_phone);
+		if(!user_email.equals("")) user.setUser_email(user_email);
+		
+		
+		boolean res = dao.updateUserInfo(user);
+		
+		if(res) {
+			System.out.println();
+			System.out.println("회원정보 변경에 성공했습니다");
+		} else {
+			System.out.println();
+			System.out.println("시스템 문제가 발생했습니다");
+			user.setUser_password(pre_user_password);
+			user.setUser_phone(pre_user_phone);
+			user.setUser_email(pre_user_email);
+		}
 	}
 
 	void logInMenu() {
@@ -352,7 +495,8 @@ public class MReservationUI {
 		}
 		
 		AuditoriumSize aud_size = null;
-		HashMap<String, String> movie_data;
+		HashMap<String, Object> movie_data;
+		int user_id = user.getUser_id();
 		while(true) {
 			System.out.println("예매하실 영화제목과 시간을 입력해주세요(메인화면:0)");
 			System.out.print("영화제목>");
@@ -362,9 +506,10 @@ public class MReservationUI {
 			String screening_start = sc.nextLine().trim();
 			if(screening_start.equals("0")) return;
 			
-			movie_data = new HashMap<String, String>();
+			movie_data = new HashMap<String, Object>();
 			movie_data.put("movie_title", movie_title);
 			movie_data.put("screening_start", screening_start);
+			movie_data.put("user_id",user_id);
 			
 			aud_size = dao.getAuditoriumSize(movie_data);
 			
@@ -409,7 +554,6 @@ public class MReservationUI {
 		}
 		int seat_row;
 		int seat_number;
-		int cnt_audience;
 		int reservation_id;
 		ArrayList<Integer> rowList = new ArrayList<>();
 		ArrayList<Integer> numberList = new ArrayList<>();
@@ -464,9 +608,15 @@ public class MReservationUI {
 					numberList.add(seat_number);
 				}
 			}
-			cnt_audience = st2.countTokens();
+			
 			if(!st2.hasMoreTokens()) break;
 		}
+		
+		int pre_user_point = user.getUser_point();
+		user.setUser_point(pre_user_point+90*numberList.size());
+		boolean pointRes = dao.updateUserInfo(user);
+		
+		if(!pointRes) user.setUser_point(pre_user_point);
 		
 		ArrayList<Ticket> ticket = dao.getTicket(reservation_id);
 		if(ticket == null || ticket.size() == 0) {
@@ -474,7 +624,6 @@ public class MReservationUI {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println("예매 조회에서 확인해주세요");
@@ -500,6 +649,9 @@ public class MReservationUI {
 				System.out.print(ticket.get(i).getSeat_number()+"번");
 				System.out.println("("+ticket.get(i).getAudience_cnt()+"명)");
 				System.out.println("======================================");
+				System.out.print(user.getUser_name()+"님"+"\t");
+				System.out.println("잔여포인트: "+(pointRes ? user.getUser_point()+"점": "포인트 적립에 문제가 발생했습니다 관리자에게 문의해주세요"));
+				System.out.println("======================================");
 				System.out.println("-교환 및 환불은 표기시간 20분 전까지 가능합니다");
 				System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
 				System.out.println("              SCIT영화관                               ");
@@ -522,10 +674,13 @@ public class MReservationUI {
 					System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
 					System.out.print(ticket.get(i).getSeat_number()+"번");
 					System.out.println("("+ticket.get(i).getAudience_cnt()+"명)");
-					System.out.println("==================================");
+					System.out.println("======================================");
+					System.out.print(user.getUser_name()+"님"+"\t");
+					System.out.println("잔여포인트: "+(pointRes ? user.getUser_point()+"점": "포인트 적립에 문제가 발생했습니다 관리자에게 문의해주세요"));
+					System.out.println("======================================");
 					System.out.println("-교환 및 환불은 표기시간 20분 전까지 가능합니다");
 					System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
-					System.out.println("                       SCIT영화관                               ");
+					System.out.println("              SCIT영화관                               ");
 					System.out.println("==============영화 입장권===============");
 				} else {
 					System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
@@ -539,6 +694,7 @@ public class MReservationUI {
 	}
 
 	void searchMovieInfo() {
+		sc.nextLine();
 		System.out.println();
 		try {
 			Thread.sleep(1500);
@@ -561,6 +717,9 @@ public class MReservationUI {
 			System.out.println("관람등급:"+movie.getMovie_rating());
 			System.out.println("================================");
 		}
+		System.out.println();
+		System.out.println("메인화면으로 돌아가시려면 아무 키나 입력해주세요");
+		sc.nextLine();
 	}
 
 	void printMainMenu() {
@@ -570,7 +729,7 @@ public class MReservationUI {
 			e.printStackTrace();
 		}
 		System.out.println();
-		System.out.println("안녕하세요 "+user.getUser_name()+"님");
+		System.out.println("환영합니다 "+user.getUser_name()+"님");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

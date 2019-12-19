@@ -95,7 +95,7 @@ screening_id NUMBER NOT NULL,
 reservation_time date default sysdate,
 CONSTRAINT RESERVATION_PK PRIMARY KEY(reservation_id),
 CONSTRAINT RESERVATION_FK_1 FOREIGN KEY (screening_id) REFERENCES screening (screening_id),
-CONSTRAINT RESERVATION_FK_2 FOREIGN KEY(user_id) REFERENCES theater_user(user_id)
+CONSTRAINT RESERVATION_FK_2 FOREIGN KEY(user_id) REFERENCES theater_user(user_id) on delete set null
 );
 
 --예매 시퀀스 생성

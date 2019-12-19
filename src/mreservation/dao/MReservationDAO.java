@@ -53,7 +53,7 @@ public class MReservationDAO {
 		return screeningList;
 	}
 
-	public AuditoriumSize getAuditoriumSize(HashMap<String, String> movie_data) {
+	public AuditoriumSize getAuditoriumSize(HashMap<String, Object> movie_data) {
 		SqlSession session = null;
 		AuditoriumSize aud_size = null;
 		
@@ -99,7 +99,7 @@ public class MReservationDAO {
 		return aud_size;
 	}
 
-	public ArrayList<Seat> getReservedSeat(HashMap<String, String> movie_data) {
+	public ArrayList<Seat> getReservedSeat(HashMap<String, Object> movie_data) {
 		SqlSession session = null;
 		ArrayList<Seat> reserved_seat = null;
 		
@@ -116,7 +116,7 @@ public class MReservationDAO {
 		return reserved_seat;
 	}
 
-	public boolean insertReservation(HashMap<String, String> movie_data) {
+	public boolean insertReservation(HashMap<String, Object> movie_data) {
 		SqlSession session = null;
 		int res = 0;
 		
@@ -258,5 +258,23 @@ public class MReservationDAO {
 		}
 		
 		return user;
+	}
+
+	public boolean updateUserInfo(User user) {
+		SqlSession session = null;
+		int res = 0;
+		
+		try {
+			session = factory.openSession();
+			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
+			res = mapper.updateUserInfo(user);
+			session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(session != null) session.close();
+		}
+		
+		return res > 0;
 	}
 }
