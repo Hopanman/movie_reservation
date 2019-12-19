@@ -50,16 +50,16 @@ public class MReservationUI {
 				deactivateUser();
 				break;
 			case 7:
-				user = null;
-				sc.nextLine();
+				logOutConfirm();
 				break;
 			case 8:
+				System.out.println();
 				System.out.println("이용해주셔서 감사합니다");
 				System.exit(0);
 			default:
 				System.out.println("1에서 8까지의 정수를 입력해주세요");
 				try {
-					Thread.sleep(1500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -68,11 +68,27 @@ public class MReservationUI {
 		
 	}
 
+	void logOutConfirm() {
+		sc.nextLine();
+		System.out.println();
+		System.out.println("로그아웃 하시겠습니까?(로그아웃:1)");
+		System.out.print(">");
+		String confirm = sc.nextLine();
+		
+		if(confirm.equals("1")) {
+			user = null;
+		} else {
+			System.out.println();
+			System.out.println("메인화면으로 돌아갑니다");
+		}
+
+	}
+
 	void deactivateUser() {
 		sc.nextLine();
 		while(true) {
 			System.out.println();
-			System.out.println("회원님의 비밀번호를 입력해주세요(메인메뉴:0)");
+			System.out.println("회원님의 비밀번호를 입력해주세요(메인화면:0)");
 			System.out.print(">");
 			String input_password = sc.nextLine();
 			
@@ -256,11 +272,11 @@ public class MReservationUI {
 		while(true) {
 			System.out.println();
 			try {
-				Thread.sleep(1500);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("로그인을 위해 아이디와 비밀번호를 입력바랍니다(회원가입:1)(종료:0)");
+			System.out.println("로그인을 위해 아이디와 비밀번호를 입력바랍니다(회원가입:1/종료:0)");
 			System.out.print("아이디>");
 			String user_name = sc.nextLine();
 			if(user_name.equals("0")) {
@@ -312,7 +328,7 @@ public class MReservationUI {
 			} else {
 				user = userList.get(0);
 				System.out.println();
-				System.out.println("로그인되었습니다.");
+				System.out.println("환영합니다 "+user.getUser_name()+"님");
 				break;
 			}
 		}
@@ -762,18 +778,12 @@ public class MReservationUI {
 
 	void printMainMenu() {
 		try {
-			Thread.sleep(1500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		System.out.println();
-		System.out.println("환영합니다 "+user.getUser_name()+"님");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("["+user.getUser_name()+"]");
 		System.out.println("원하시는 메뉴를 선택해주세요");
 		System.out.println("1.상영영화정보");
 		System.out.println("2.영화예매");
