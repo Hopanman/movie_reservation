@@ -39,25 +39,23 @@ public class MReservationUI {
 				movieReservation();
 				break;
 			case 3:
-				refundReservation();
+				reservationList();
 				break;
 			case 4:
-				break;
-			case 5:
 				updateUserInfo();
 				break;
-			case 6:
+			case 5:
 				deactivateUser();
 				break;
-			case 7:
+			case 6:
 				logOutConfirm();
 				break;
-			case 8:
+			case 7:
 				System.out.println();
 				System.out.println("이용해주셔서 감사합니다");
 				System.exit(0);
 			default:
-				System.out.println("1에서 8까지의 정수를 입력해주세요");
+				System.out.println("1에서 7까지의 정수를 입력해주세요");
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -484,11 +482,76 @@ public class MReservationUI {
 		else System.out.println("시스템 문제가 발생했습니다");
 	}
 
-	void refundReservation() {
+	void reservationList() {
 		sc.nextLine();
-		System.out.println();
 		while(true) {
-			System.out.println("환불하실 티켓의 예매번호를 입력해주세요(메인화면:0)");
+			System.out.println();
+			ArrayList<UserMovie> movieList = dao.getReservedMovie(user.getUser_id());
+			
+			if(movieList == null) {
+				System.out.println("시스템 문제가 발생했습니다");
+				return;
+			}
+			
+			System.out.println("===========================예매 내역================================");
+			System.out.printf("%-11s%-11s%-12s%-14s%-11s%-11s%n","예매번호","영화제목","시작시간","종료시간","상영관","회차");
+			System.out.println("==================================================================");
+			
+			for(UserMovie movie : movieList) {
+				System.out.printf("%-8s%-14s%-12s%-15s%-12s%-11s%n", movie.getReservation_id()+"", movie.getMovie_title(), movie.getScreening_start().substring(5, 16), movie.getScreening_end().substring(5, 16),movie.getAuditorium_id()+"관",movie.getScreening_cnt());
+			}
+			if(movieList.size()==0) {
+				System.out.println("                           예매하신 영화가 없습니다");
+				System.out.println("===========================예매 내역================================");
+				return;
+			}
+			System.out.println("===========================예매 내역================================");
+			System.out.println();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int service = 0;
+			System.out.println("원하시는 서비스를 선택해주세요 1.티켓출력 2.영화환불 3.메인화면");
+			System.out.print(">");
+			
+			try {
+				service = sc.nextInt();
+			} catch (Exception e) {
+				sc.nextLine();
+			}
+			
+			switch(service) {
+			case 1:
+				printTicket();
+				break;
+			case 2:
+				refundReservation();
+				break;
+			case 3:
+				return;
+			default:
+				sc.nextLine();
+				System.out.println();
+				System.out.println("1에서 3까지의 정수를 입력해주세요");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}	
+			}						
+		}			
+	}
+
+	void printTicket() {
+		
+	}
+
+	void refundReservation() {
+		while(true) {
+			System.out.println();
+			System.out.println("환불하실 티켓의 예매번호를 입력해주세요(예매내역화면:0)");
 			System.out.println("**환불은 상영시작시간 20분 전까지 가능합니다**");
 			System.out.print(">");
 			int reservation_id;
@@ -504,7 +567,6 @@ public class MReservationUI {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				System.out.println();
 				continue;
 			}
 			
@@ -513,16 +575,34 @@ public class MReservationUI {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("reservation_id", reservation_id);
 			map.put("refund", true);
+			map.put("user_id", user.getUser_id());
 			boolean res = dao.deleteReservation(map);
 			
 			if(res) {
+				System.out.println();
 				System.out.println("환불되셨습니다");
+				int pre_user_point = user.getUser_point();
+				user.setUser_point(pre_user_point-90);
+				boolean pointRes = dao.updateUserInfo(user);
+				
+				if(!pointRes) user.setUser_point(pre_user_point);
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return;
 			} else {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return;
-			}
+			}		
 		}
-		
+	
 	}
 
 	void movieReservation() {
@@ -667,12 +747,15 @@ public class MReservationUI {
 		}
 		
 		int pre_user_point = user.getUser_point();
-		user.setUser_point(pre_user_point+90*numberList.size());
+		user.setUser_point(pre_user_point+90);
 		boolean pointRes = dao.updateUserInfo(user);
 		
 		if(!pointRes) user.setUser_point(pre_user_point);
 		
-		ArrayList<Ticket> ticket = dao.getTicket(reservation_id);
+		HashMap<String, Integer> ticketMap = new HashMap<String, Integer>();
+		ticketMap.put("reservation_id", reservation_id);
+		ticketMap.put("user_id", user_id);
+		ArrayList<Ticket> ticket = dao.getTicket(ticketMap);
 		if(ticket == null || ticket.size() == 0) {
 			System.out.println("티켓 출력에 문제가 생겼습니다");
 			try {
@@ -784,15 +867,14 @@ public class MReservationUI {
 		}
 		System.out.println();
 		System.out.println("["+user.getUser_name()+"]");
-		System.out.println("원하시는 메뉴를 선택해주세요");
-		System.out.println("1.상영영화정보");
+		System.out.println("원하시는 서비스를 선택해주세요");
+		System.out.println("1.영화상세정보");
 		System.out.println("2.영화예매");
-		System.out.println("3.영화환불");
-		System.out.println("4.예매조회");
-		System.out.println("5.회원정보수정");
-		System.out.println("6.회원탈퇴");
-		System.out.println("7.로그아웃");
-		System.out.println("8.종료");
+		System.out.println("3.예매내역조회");
+		System.out.println("4.회원정보수정");
+		System.out.println("5.회원탈퇴");
+		System.out.println("6.로그아웃");
+		System.out.println("7.종료");
 		System.out.print(">");
 	}
 }

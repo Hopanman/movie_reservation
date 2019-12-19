@@ -14,6 +14,7 @@
 		<typeAlias type="mreservation.vo.Reservation" alias="Reservation" />
 		<typeAlias type="mreservation.vo.Ticket" alias="Ticket" />
 		<typeAlias type="mreservation.vo.User" alias="User" />
+		<typeAlias type="mreservation.vo.UserMovie" alias="UserMovie" />
 	</typeAliases>
 	
 	<!-- DB접속 정보 셋팅 -->

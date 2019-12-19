@@ -6,7 +6,7 @@ public class UserMovie {
 	private String screening_start;
 	private String screening_end;
 	private int auditorium_id;
-	private String screening_snt;
+	private String screening_cnt;
 	
 	public UserMovie() {
 		
@@ -20,7 +20,7 @@ public class UserMovie {
 		this.screening_start = screening_start;
 		this.screening_end = screening_end;
 		this.auditorium_id = auditorium_id;
-		this.screening_snt = screening_snt;
+		this.screening_cnt = screening_snt;
 	}
 
 	public int getReservation_id() {
@@ -63,19 +63,19 @@ public class UserMovie {
 		this.auditorium_id = auditorium_id;
 	}
 
-	public String getScreening_snt() {
-		return screening_snt;
+	public String getScreening_cnt() {
+		return screening_cnt;
 	}
 
-	public void setScreening_snt(String screening_snt) {
-		this.screening_snt = screening_snt;
+	public void setScreening_cnt(String screening_snt) {
+		this.screening_cnt = screening_snt;
 	}
 
 	@Override
 	public String toString() {
 		return "UserMovie [reservation_id=" + reservation_id + ", movie_title=" + movie_title + ", screening_start="
 				+ screening_start + ", screening_end=" + screening_end + ", auditorium_id=" + auditorium_id
-				+ ", screening_snt=" + screening_snt + "]";
+				+ ", screening_cnt=" + screening_cnt + "]";
 	}
 	
 	

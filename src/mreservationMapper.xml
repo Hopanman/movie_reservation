@@ -63,6 +63,7 @@
 				where re.screening_id=sc.screening_id
 				and re.reservation_id=#{reservation_id}
 				and screening_start > sysdate+20/1440)
+				and user_id=#{user_id}
 			</if>
 			<if test="refund == false">
 				reservation_id=#{reservation_id}
@@ -70,7 +71,7 @@
 		</where>
 	</delete>
 	
-	<select id="getTicket" parameterType="int" resultType="Ticket">
+	<select id="getTicket" parameterType="map" resultType="Ticket">
 		select mo.movie_title, mo.movie_title_en,mo.movie_rating, sc.screening_cnt, sc.screening_start, sc.screening_end, sc.auditorium_id, re.reservation_id, re.user_id, re.reservation_time, se.seat_row, se.seat_number, count(*) over(partition by re.reservation_id) as audience_cnt 
 		from movie mo, screening sc, reservation re, seat_reserved se_r, seat se
 		where mo.movie_id=sc.movie_id
@@ -78,6 +79,7 @@
 		and re.reservation_id=se_r.reservation_id
 		and se_r.seat_id=se.seat_id
 		and re.reservation_id=#{reservation_id}
+		and re.user_id=#{user_id}
 	</select>
 	
 	<insert id="insertUser" parameterType="User">
@@ -94,6 +96,16 @@
 	</select>
 	
 	<update id="updateUserInfo" parameterType="User">
-		update theater_user set user_password=#{user_password}, user_phone=#{user_phone}, user_email=#{user_email}, user_point=#{user_point}, user_activation=#{user_activation} where user_id=#{user_id}
+		update theater_user set user_password=#{user_password}, user_phone=#{user_phone}, user_email=#{user_email}, user_point=#{user_point}, user_activation=#{user_activation} where user_id=#{user_id}		
 	</update>
+	
+	<select id="getReservedMovie" parameterType="int" resultType="UserMovie">
+		select re.reservation_id, mo.movie_title, sc.screening_start, sc.screening_end, sc.auditorium_id, sc.screening_cnt
+		from reservation re, screening sc, movie mo
+		where re.screening_id=sc.screening_id
+		and sc.movie_id=mo.movie_id
+		and user_id=#{user_id}
+		and screening_start >= sysdate
+		order by reservation_id desc
+	</select>
 </mapper>

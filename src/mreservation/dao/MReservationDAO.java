@@ -14,6 +14,7 @@ import mreservation.vo.Screening;
 import mreservation.vo.Seat;
 import mreservation.vo.Ticket;
 import mreservation.vo.User;
+import mreservation.vo.UserMovie;
 
 public class MReservationDAO {
 	
@@ -181,13 +182,17 @@ public class MReservationDAO {
 			session.commit();
 		}catch (Exception e) {
 			e.printStackTrace();
+			System.out.println();
 			System.out.println("시스템 문제가 발생했습니다");
 			return false;
 		}finally {
 			if(session != null) session.close();
 		}
 		
-		if(res == 0) System.out.println("환불할 수 없는 예매번호입니다");
+		if(res == 0) {
+			System.out.println();
+			System.out.println("환불할 수 없는 예매번호입니다");
+		}
 		return res > 0;
 	}
 
@@ -208,14 +213,14 @@ public class MReservationDAO {
 		return curr_res;
 	}
 
-	public ArrayList<Ticket> getTicket(int reservation_id) {
+	public ArrayList<Ticket> getTicket(HashMap<String, Integer> ticketMap) {
 		SqlSession session = null;
 		ArrayList<Ticket> ticket = null;
 		
 		try {
 			session = factory.openSession();
 			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
-			ticket = mapper.getTicket(reservation_id);
+			ticket = mapper.getTicket(ticketMap);
 		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -276,5 +281,22 @@ public class MReservationDAO {
 		}
 		
 		return res > 0;
+	}
+
+	public ArrayList<UserMovie> getReservedMovie(int user_id) {
+		SqlSession session = null;
+		ArrayList<UserMovie> movieList = null;
+		
+		try {
+			session = factory.openSession();
+			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
+			movieList = mapper.getReservedMovie(user_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(session != null) session.close();
+		}
+		
+		return movieList;
 	}
 }
