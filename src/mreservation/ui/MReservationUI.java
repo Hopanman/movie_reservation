@@ -47,14 +47,17 @@ public class MReservationUI {
 				updateUserInfo();
 				break;
 			case 6:
+				deactivateUser();
+				break;
+			case 7:
 				user = null;
 				sc.nextLine();
 				break;
-			case 7:
+			case 8:
 				System.out.println("이용해주셔서 감사합니다");
 				System.exit(0);
 			default:
-				System.out.println("1에서 7까지의 정수를 입력해주세요");
+				System.out.println("1에서 8까지의 정수를 입력해주세요");
 				try {
 					Thread.sleep(1500);
 				} catch (InterruptedException e) {
@@ -63,6 +66,42 @@ public class MReservationUI {
 			}
 		}
 		
+	}
+
+	void deactivateUser() {
+		sc.nextLine();
+		while(true) {
+			System.out.println();
+			System.out.println("회원님의 비밀번호를 입력해주세요(메인메뉴:0)");
+			System.out.print(">");
+			String input_password = sc.nextLine();
+			
+			if(input_password.equals("0")) return;
+			if(!user.getUser_password().equals(input_password)) {
+				System.out.println();
+				System.out.println("비밀번호가 일치하지 않습니다");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} else break;
+		}
+		
+		user.setUser_activation(0);
+		
+		boolean res = dao.updateUserInfo(user);
+		
+		if(res) {
+			System.out.println();
+			System.out.println("회원탈퇴가 완료되었습니다");
+			System.out.println("SCIT영화관 어플을 이용해주셔서 감사합니다");
+			user = null;
+		} else {
+			System.out.println();
+			System.out.println("시스템 문제가 발생했습니다");
+			user.setUser_activation(1);
+		}
 	}
 
 	void updateUserInfo() {
@@ -248,6 +287,7 @@ public class MReservationUI {
 			map.put("user_name", user_name);
 			map.put("password_in", true);
 			map.put("user_password",user_password);
+			map.put("user_activation", 1);
 			
 			ArrayList<User> userList = dao.searchUser(map);
 			
@@ -740,8 +780,9 @@ public class MReservationUI {
 		System.out.println("3.영화환불");
 		System.out.println("4.예매조회");
 		System.out.println("5.회원정보수정");
-		System.out.println("6.로그아웃");
-		System.out.println("7.종료");
+		System.out.println("6.회원탈퇴");
+		System.out.println("7.로그아웃");
+		System.out.println("8.종료");
 		System.out.print(">");
 	}
 }

@@ -81,19 +81,19 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="User">
-		insert into theater_user values(user_seq.nextval, #{user_name}, #{user_password}, #{user_phone}, #{user_email}, default)
+		insert into theater_user values(user_seq.nextval, #{user_name}, #{user_password}, #{user_phone}, #{user_email}, default, default)
 	</insert>
 	
 	<select id="searchUser" parameterType="map" resultType="User">
 		select * from theater_user where user_name=#{user_name}
 		<choose>
 			<when test="password_in != false">
-				and user_password=#{user_password}
+				and user_password=#{user_password} and user_activation=#{user_activation} 
 			</when>
 		</choose>
 	</select>
 	
 	<update id="updateUserInfo" parameterType="User">
-		update theater_user set user_password=#{user_password}, user_phone=#{user_phone}, user_email=#{user_email}, user_point=#{user_point} where user_id=#{user_id}
+		update theater_user set user_password=#{user_password}, user_phone=#{user_phone}, user_email=#{user_email}, user_point=#{user_point}, user_activation=#{user_activation} where user_id=#{user_id}
 	</update>
 </mapper>
