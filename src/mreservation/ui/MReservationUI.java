@@ -39,24 +39,22 @@ public class MReservationUI {
 				movieReservation();
 				break;
 			case 3:
-				break;
-			case 4:
 				refundReservation();
 				break;
-			case 5:
+			case 4:
 				break;
-			case 6:
+			case 5:
 				updateUserInfo();
 				break;
-			case 7:
+			case 6:
 				user = null;
 				sc.nextLine();
 				break;
-			case 8:
+			case 7:
 				System.out.println("이용해주셔서 감사합니다");
 				System.exit(0);
 			default:
-				System.out.println("1에서 8까지의 정수를 입력해주세요");
+				System.out.println("1에서 7까지의 정수를 입력해주세요");
 				try {
 					Thread.sleep(1500);
 				} catch (InterruptedException e) {
@@ -652,7 +650,7 @@ public class MReservationUI {
 				System.out.print(user.getUser_name()+"님"+"\t");
 				System.out.println("잔여포인트: "+(pointRes ? user.getUser_point()+"점": "포인트 적립에 문제가 발생했습니다 관리자에게 문의해주세요"));
 				System.out.println("======================================");
-				System.out.println("-교환 및 환불은 표기시간 20분 전까지 가능합니다");
+				System.out.println("-환불은 표기시간 20분 전까지 가능합니다");
 				System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
 				System.out.println("              SCIT영화관                               ");
 				System.out.println("==============영화 입장권===============");
@@ -678,7 +676,7 @@ public class MReservationUI {
 					System.out.print(user.getUser_name()+"님"+"\t");
 					System.out.println("잔여포인트: "+(pointRes ? user.getUser_point()+"점": "포인트 적립에 문제가 발생했습니다 관리자에게 문의해주세요"));
 					System.out.println("======================================");
-					System.out.println("-교환 및 환불은 표기시간 20분 전까지 가능합니다");
+					System.out.println("-환불은 표기시간 20분 전까지 가능합니다");
 					System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
 					System.out.println("              SCIT영화관                               ");
 					System.out.println("==============영화 입장권===============");
@@ -739,12 +737,11 @@ public class MReservationUI {
 		System.out.println("원하시는 메뉴를 선택해주세요");
 		System.out.println("1.상영영화정보");
 		System.out.println("2.영화예매");
-		System.out.println("3.영화교환");
-		System.out.println("4.영화환불");
-		System.out.println("5.예매조회");
-		System.out.println("6.회원정보수정");
-		System.out.println("7.로그아웃");
-		System.out.println("8.종료");
+		System.out.println("3.영화환불");
+		System.out.println("4.예매조회");
+		System.out.println("5.회원정보수정");
+		System.out.println("6.로그아웃");
+		System.out.println("7.종료");
 		System.out.print(">");
 	}
 }
