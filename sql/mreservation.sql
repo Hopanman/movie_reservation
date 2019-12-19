@@ -61,7 +61,8 @@ user_password VARCHAR2(20) NOT NULL,
 user_phone VARCHAR2(14) NOT NULL, 
 user_email VARCHAR2(30), 
 user_point NUMBER DEFAULT 0 NOT NULL, 
-CONSTRAINT USER_PK PRIMARY KEY (user_id)
+CONSTRAINT USER_PK PRIMARY KEY (user_id),
+constraint user_uk unique(user_name)
 );
 
 --회원 시퀀스 생성

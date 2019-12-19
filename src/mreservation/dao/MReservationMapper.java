@@ -16,4 +16,5 @@ public interface MReservationMapper {
 	int deleteReservation(HashMap<String, Object> map);
 	ArrayList<Ticket> getTicket(int reservation_id);
 	int insertUser(User user);
+	ArrayList<User> searchUser(HashMap<String, Object> map);
 }

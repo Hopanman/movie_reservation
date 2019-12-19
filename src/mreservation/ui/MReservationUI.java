@@ -46,8 +46,11 @@ public class MReservationUI {
 			case 5:
 				break;
 			case 6:
+				updateUserInfo();
 				break;
 			case 7:
+				user = null;
+				sc.nextLine();
 				break;
 			case 8:
 				System.out.println("이용해주셔서 감사합니다");
@@ -65,6 +68,10 @@ public class MReservationUI {
 		
 	}
 	
+	void updateUserInfo() {
+		
+	}
+
 	void logInMenu() {
 		while(true) {
 			System.out.println();
@@ -80,7 +87,53 @@ public class MReservationUI {
 				System.out.println();
 				System.out.println("이용해주셔서 감사합니다");
 				System.exit(0);
-			} else if(user_name.equals("1")) enrollUser();
+			} else if(user_name.equals("1")) {
+				enrollUser();
+				continue;
+			}
+			
+			System.out.print("비밀번호>");
+			String user_password = sc.nextLine();
+			if(user_password.equals("0")) {
+				System.out.println();
+				System.out.println("이용해주셔서 감사합니다");
+				System.exit(0);
+			} else if(user_password.equals("1")) {
+				enrollUser();
+				continue;
+			}
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("user_name", user_name);
+			map.put("password_in", true);
+			map.put("user_password",user_password);
+			
+			ArrayList<User> userList = dao.searchUser(map);
+			
+			if(userList == null) {
+				System.out.println();
+				System.out.println("시스템 문제가 발생했습니다.");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if(userList.size() == 0) {
+				System.out.println();
+				System.out.println("가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				user = userList.get(0);
+				System.out.println();
+				System.out.println("로그인되었습니다.");
+				break;
+			}
 		}
 
 	}
@@ -113,6 +166,7 @@ public class MReservationUI {
 			if(user_name.equals("0")) return;
 			
 			Matcher matcher = pattern.matcher(user_name);
+			
 			if(!matcher.matches()) {
 				System.out.println();
 				System.out.println("아이디는 5~20자리의 영문 소문자,숫자로 구성되어야 합니다.");
@@ -124,7 +178,36 @@ public class MReservationUI {
 				}
 				System.out.println();
 			} else {
-				break;
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("user_name", user_name);
+				map.put("password_in", false);
+				
+				ArrayList<User> user = dao.searchUser(map);
+				
+				if(user == null) {
+					System.out.println();
+					System.out.println("시스템 문제가 발생했습니다.");
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println();
+				} else if(user.size() == 1) {
+					System.out.println();
+					System.out.println("사용할 수 없는 ID입니다");
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println();
+				} else {
+					break;
+				}
+				
 			}
 		}
 		
@@ -487,6 +570,13 @@ public class MReservationUI {
 			e.printStackTrace();
 		}
 		System.out.println();
+		System.out.println("안녕하세요 "+user.getUser_name()+"님");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("원하시는 메뉴를 선택해주세요");
 		System.out.println("1.상영영화정보");
 		System.out.println("2.영화예매");

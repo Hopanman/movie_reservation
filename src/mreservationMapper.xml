@@ -83,4 +83,13 @@
 	<insert id="insertUser" parameterType="User">
 		insert into theater_user values(user_seq.nextval, #{user_name}, #{user_password}, #{user_phone}, #{user_email}, default)
 	</insert>
+	
+	<select id="searchUser" parameterType="map" resultType="User">
+		select * from theater_user where user_name=#{user_name}
+		<choose>
+			<when test="password_in != false">
+				and user_password=#{user_password}
+			</when>
+		</choose>
+	</select>
 </mapper>

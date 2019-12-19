@@ -1,6 +1,5 @@
 package mreservation.dao;
 
-import java.sql.SQLDataException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -242,5 +241,22 @@ public class MReservationDAO {
 		}
 		
 		return res > 0;
+	}
+
+	public ArrayList<User> searchUser(HashMap<String, Object> map) {
+		SqlSession session = null;
+		ArrayList<User> user = null;
+		
+		try {
+			session = factory.openSession();
+			MReservationMapper mapper = session.getMapper(MReservationMapper.class);
+			user = mapper.searchUser(map);
+		}catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(session != null) session.close();
+		}
+		
+		return user;
 	}
 }
