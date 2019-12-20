@@ -16,7 +16,7 @@ public class MReservationUI {
 	public MReservationUI() {
 		
 		System.out.println("안녕하세요 SCIT영화관 어플입니다");
-		System.out.println("본 어플은 회원제로 되어있습니다");
+		System.out.println("본 어플은 회원제입니다");
 		
 		while(true) {
 			if(user == null) logInMenu();
