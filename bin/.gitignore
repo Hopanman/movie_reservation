@@ -1,3 +1,4 @@
-/mreservationMapper.xml
+/db.properties
 /mreservation/
-/Screening.class
+/mreservationMapper.xml
+/mybatis-config.xml

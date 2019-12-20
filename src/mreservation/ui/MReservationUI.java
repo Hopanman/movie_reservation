@@ -532,7 +532,6 @@ public class MReservationUI {
 			case 3:
 				return;
 			default:
-				sc.nextLine();
 				System.out.println();
 				System.out.println("1에서 3까지의 정수를 입력해주세요");
 				try {
@@ -545,7 +544,112 @@ public class MReservationUI {
 	}
 
 	void printTicket() {
-		
+		while(true) {
+			System.out.println();
+			System.out.println("출력할 티켓의 예매번호를 입력해주세요(예매내역화면:0)");
+			System.out.print(">");
+			int reservation_id;
+			try {
+				reservation_id = sc.nextInt();
+				if(reservation_id < 0) throw new Exception();
+			} catch (Exception e) {
+				System.out.println();
+				sc.nextLine();
+				System.out.println("예매번호를 올바르게 입력해주십시오");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				continue;
+			}
+			
+			if(reservation_id == 0) return;
+			
+			HashMap<String, Integer> ticketMap = new HashMap<String, Integer>();
+			ticketMap.put("reservation_id", reservation_id);
+			ticketMap.put("user_id", user.getUser_id());
+			ArrayList<Ticket> ticket = dao.getTicket(ticketMap);
+			char[] row_name = {'A','B','C','D','E','F','G'};
+			
+			if(ticket == null) {
+				System.out.println();
+				System.out.println("시스템 문제가 발생했습니다");
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				return;
+			} else if(ticket.size() == 0) {
+				System.out.println();
+				System.out.println("출력할 수 있는 예매번호가 아닙니다");
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println();
+				System.out.println("==============영화 입장권===============");
+				for(int i=0; i<ticket.size();i++) {
+					if(i==0 && i == ticket.size()-1) {
+						System.out.println("예매번호 "+ticket.get(i).getReservation_id()+"번");
+						System.out.println(ticket.get(i).getMovie_title());
+						System.out.println(ticket.get(i).getMovie_title_en());
+						System.out.println(ticket.get(i).getMovie_rating());
+						System.out.println("======================================");
+						System.out.print(ticket.get(i).getScreening_start().substring(0, 10)+"\t");
+						System.out.print(ticket.get(i).getScreening_cnt()+"\t");
+						System.out.print(ticket.get(i).getScreening_start().substring(11, 16)+"~");
+						System.out.println(ticket.get(i).getScreening_end().substring(11, 16));
+						System.out.print(ticket.get(i).getAuditorium_id()+"관"+"\t");
+						System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
+						System.out.print(ticket.get(i).getSeat_number()+"번");
+						System.out.println("("+ticket.get(i).getAudience_cnt()+"명)");
+						System.out.println("======================================");
+						System.out.print(user.getUser_name()+"님"+"\t");
+						System.out.println("잔여포인트: "+user.getUser_point()+"점");
+						System.out.println("======================================");
+						System.out.println("-환불은 표기시간 20분 전까지 가능합니다");
+						System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
+						System.out.println("              SCIT영화관                               ");
+						System.out.println("==============영화 입장권===============");
+					} else {
+						if(i==0) {
+							System.out.println("예매번호 "+ticket.get(i).getReservation_id()+"번");
+							System.out.println(ticket.get(i).getMovie_title());
+							System.out.println(ticket.get(i).getMovie_title_en());
+							System.out.println(ticket.get(i).getMovie_rating());
+							System.out.println("======================================");
+							System.out.print(ticket.get(i).getScreening_start().substring(0, 10)+"\t");
+							System.out.print(ticket.get(i).getScreening_cnt()+"\t");
+							System.out.print(ticket.get(i).getScreening_start().substring(11, 16)+"~");
+							System.out.println(ticket.get(i).getScreening_end().substring(11, 16));
+							System.out.print(ticket.get(i).getAuditorium_id()+"관"+"\t");
+							System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
+							System.out.print(ticket.get(i).getSeat_number()+"번"+" ");
+						} else if(i==ticket.size()-1) {
+							System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
+							System.out.print(ticket.get(i).getSeat_number()+"번");
+							System.out.println("("+ticket.get(i).getAudience_cnt()+"명)");
+							System.out.println("======================================");
+							System.out.print(user.getUser_name()+"님"+"\t");
+							System.out.println("잔여포인트: "+user.getUser_point()+"점");
+							System.out.println("======================================");
+							System.out.println("-환불은 표기시간 20분 전까지 가능합니다");
+							System.out.println("-지연입장에 의한 관람불편을 최소화하고자 영화는 약 10분 후에 시작됩니다");
+							System.out.println("              SCIT영화관                               ");
+							System.out.println("==============영화 입장권===============");
+						} else {
+							System.out.print(row_name[ticket.get(i).getSeat_row()-1]+"열");
+							System.out.print(ticket.get(i).getSeat_number()+"번"+" ");
+						}
+					}
+					
+				}
+			}
+		}
 	}
 
 	void refundReservation() {
